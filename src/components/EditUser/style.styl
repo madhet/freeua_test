@@ -1,0 +1,47 @@
+.user-edit-form-wrapper
+	h2
+		padding 5px 10px
+		margin 5px 0
+	.user-edit-form
+		padding 5px
+		font-size 18px
+		.form-photo-wrapper
+			.form-photo
+				width 200px
+				height 200px
+		.form-input-wrapper
+			max-width 40%
+			padding 3px 0
+			.form-input-label
+				padding 3px 0
+				.span-required
+					color red
+			.form-input
+				width 100%
+				box-sizing border-box
+				border 1px solid black
+				outline none
+				padding 2px
+				font-family inherit
+				font-size inherit
+				&.error
+					border 1px solid red
+					~.form-input-error
+						display block
+						color red
+			.form-input-error
+				display none
+		.form-submit-button
+			width 100px
+			padding 15px
+			margin 10px
+			border 1px solid #d3d3d3
+			border-radius 10px
+			background-color white
+			outline none
+			cursor pointer
+			font-family inherit
+			font-size 15px
+			text-transform uppercase
+			&:first-of-type
+				margin-left 0
