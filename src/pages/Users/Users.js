@@ -22,12 +22,19 @@ export default function Users(props) {
 					setServerError(true);
 				}
 			});
-	}, [showEdit]);
+	}, []);
 
 	if (serverError) {
 		return <div>No connection to server</div>;
 	} else if (showEdit.show) {
-		return <EditUser user={showEdit.user} setEdit={setEdit} />;
+		return (
+			<EditUser
+				user={showEdit.user}
+				setEdit={setEdit}
+				setUsers={setUsers}
+				setCurrentUser={setCurrentUser}
+			/>
+		);
 	} else {
 		return (
 			<div className="users-wrapper">
@@ -43,7 +50,9 @@ export default function Users(props) {
 						user={users.find(user => user._id === currentUser)}
 						setCurrentUser={setCurrentUser}
 						setEdit={setEdit}
-						routerProps={props}></UserDetail>
+						routerProps={props}
+						setUsers={setUsers}
+					/>
 				) : (
 					""
 				)}

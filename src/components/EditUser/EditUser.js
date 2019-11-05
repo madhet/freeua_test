@@ -78,6 +78,8 @@ export default class EditUser extends Component {
 		phone: /^\+?\d+$/i
 	};
 
+	userData = this.props.user;
+
 	componentDidMount() {
 		if (this.props.user._id) {
 			const {
@@ -185,11 +187,12 @@ export default class EditUser extends Component {
 
 	submitForm = event => {
 		event.preventDefault();
-		const { _id, username, email, birthday, photo, phone } = this.state;
+		let age = calcAge(this.state.birthday);
+		this.setState({ age });
+		let { _id, username, email, birthday, photo, phone } = this.state;
 		let method = _id ? "PATCH" : "POST";
 		let url = `/users${_id ? "/" + _id : ""}`;
 		let bd = strToDate(birthday);
-		let age = calcAge(birthday);
 		let resBody = {
 			username,
 			email,
@@ -198,7 +201,33 @@ export default class EditUser extends Component {
 			photo,
 			phone
 		};
-		request(url, method, resBody).then(() => {
+		// if (_id) {
+		// 	for (let key in this.userData) {
+		// 		if (this.userData[key] !== this.state[key])
+		// 			testB[key] = this.state[key];
+		// 	}
+		// } else {
+		// 	resBody = {
+		// 		username,
+		// 		email,
+		// 		birthday: bd,
+		// 		age,
+		// 		photo,
+		// 		phone
+		// 	};
+		// }
+
+		request(url, method, resBody).then(user => {
+			this.props.setUsers(prevState => {
+				if (prevState.findIndex(item => item._id === user._id) === -1) {
+					this.props.setCurrentUser("");
+					return prevState.concat(user);
+				} else {
+					return prevState.map(item =>
+						item._id === user._id ? user : item
+					);
+				}
+			});
 			this.props.setEdit({ show: false });
 		});
 	};

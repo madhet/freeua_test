@@ -2,12 +2,20 @@ import React from "react";
 import { dateToStr } from "../../helpers/helpers";
 import request from "../../helpers/request";
 
-export default function UserDetail({ user, setEdit }) {
+export default function UserDetail({
+	user,
+	setEdit,
+	setUsers,
+	setCurrentUser
+}) {
 	function deleteUser(id) {
 		if (id) {
 			if (window.confirm("Delete this user?")) {
 				request(`/users/${id}`, "DELETE").then(() => {
-					setEdit({ user: null });
+					setCurrentUser("");
+					setUsers(prevState => {
+						return prevState.filter(item => item._id !== id);
+					});
 				});
 			}
 		}
