@@ -1,83 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
+import MultiListItem from "./MultiListItem";
 
-const sketch = {
+class TreeList {
+	constructor(value = null, sub = null) {
+		this.value = value;
+		this.sub = sub;
+	}
 	addSub() {
 		this.sub = [];
-	},
+	}
 	delSub() {
 		this.sub = null;
-	},
+	}
 	addValue(value) {
 		if (!this.sub) this.addSub();
-		this.sub.push({
-			id: this.id + 1,
-			value,
-			sub: null,
-			__proto__: this.__proto__
-		});
-	},
+		this.sub.push(new TreeList(value));
+	}
 	delValue(value) {
-		this.sub = this.sub.filter(item => item.value !== value);
-	},
+		this.sub = this.sub.filter(item => item.value !== value.value);
+	}
 	moveUp(value) {
 		let elem = this.sub.filter(item => item.value === value)[0];
 		let pos = this.sub.indexOf(elem);
 		if (pos === 0) return;
 		this.sub.splice(pos - 1, 2, elem, this.sub[pos - 1]);
-	},
+	}
 	moveDown(value) {
 		let elem = this.sub.filter(item => item.value === value)[0];
 		let pos = this.sub.indexOf(elem);
 		if (pos === this.sub.length - 1) return;
 		this.sub.splice(pos, 2, this.sub[pos + 1], elem);
 	}
-};
+}
 
-let mList3 = {
-	value: null,
-	sub: null
-};
-mList3.__proto__ = sketch;
-mList3.addSub();
-mList3.addValue("List_1");
-mList3.sub[0].addSub();
-mList3.sub[0].addValue("List_1-1");
-mList3.sub[0].addValue("List_1-2");
-mList3.sub[0].sub[1].addValue("List_1-2-1");
-mList3.sub[0].sub[1].addValue("List_1-2-2");
-mList3.sub[0].addValue("List_1-3");
-mList3.sub[0].addValue("List_1-4");
+/* some initial not empty tree */
+let someTree = new TreeList("", []); //create root node
+someTree.addValue("List_1");
+someTree.sub[0].addSub();
+someTree.sub[0].addValue("List_1-1");
+someTree.sub[0].addValue("List_1-2");
+someTree.sub[0].sub[1].addValue("List_1-2-1");
+someTree.sub[0].sub[1].addValue("List_1-2-2");
+someTree.sub[0].addValue("List_1-3");
+someTree.sub[0].addValue("List_1-4");
 
-console.log(mList3);
+/* empty tree */
+//let emptyTree = new TreeList("", []); //create root node
 
-const MultiListItem = ({ item }) => {
-	console.log(item);
-	const { value, sub } = item;
+export default function MultiList({ title }) {
+	const [isUpdated, updateTree] = useState(false);
+
 	return (
-		<li>
-			{value ? value : ""}
-			{sub && sub.length ? (
-				<ul>
-					{sub.map((item, idx) => {
-						// console.log(item);
-						return (
-							<MultiListItem
-								key={idx}
-								item={item}></MultiListItem>
-						);
-					})}
-				</ul>
-			) : (
-				""
-			)}
-		</li>
-	);
-};
-
-export default function MultiList() {
-	return (
-		<ul>
-			<MultiListItem item={mList3}></MultiListItem>;
-		</ul>
+		<div className="tree-wrapper">
+			{title ? <div className="tree-title">{title}</div> : ""}
+			<MultiListItem
+				list={someTree}
+				// list={emptyTree}
+				isUpdated={isUpdated}
+				updateTree={updateTree}
+			/>
+		</div>
 	);
 }

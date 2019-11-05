@@ -4,7 +4,7 @@ import MultiList from "../components/MultiList/MultiList";
 export default function list() {
 	return (
 		<div>
-			<MultiList></MultiList>
+			<MultiList title="Test list" />
 		</div>
 	);
 }
