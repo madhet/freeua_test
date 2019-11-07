@@ -31,6 +31,29 @@ class TreeList {
 		if (pos === this.sub.length - 1) return;
 		this.sub.splice(pos, 2, this.sub[pos + 1], elem);
 	}
+	hasNode(node) {
+		if (this === node) {
+			return true;
+		}
+		if (this.sub && this.sub.length) {
+			if (this.sub.some(item => item.hasNode(node))) {
+				return true;
+			}
+		}
+		return false;
+	}
+	getNode(node) {
+		if (this === node) {
+			return this;
+		}
+		if (this.sub && this.sub.length) {
+			let temp = this.sub.filter(item => item.getNode(node));
+			if (temp.length) {
+				return temp[0].getNode(node);
+			}
+		}
+		return null;
+	}
 }
 
 /* some initial not empty tree */
@@ -45,19 +68,22 @@ someTree.sub[0].addValue("List_1-3");
 someTree.sub[0].addValue("List_1-4");
 
 /* empty tree */
-//let emptyTree = new TreeList("", []); //create root node
+// let emptyTree = new TreeList("", []); //create root node
 
 export default function MultiList({ title }) {
 	const [isUpdated, updateTree] = useState(false);
+	const [stateTree, changeTree] = useState(new TreeList("", []));
 
 	return (
 		<div className="tree-wrapper">
 			{title ? <div className="tree-title">{title}</div> : ""}
 			<MultiListItem
-				list={someTree}
+				list={stateTree}
+				// list={someTree}
 				// list={emptyTree}
 				isUpdated={isUpdated}
 				updateTree={updateTree}
+				changeTree={changeTree}
 			/>
 		</div>
 	);

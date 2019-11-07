@@ -8,7 +8,7 @@
 2. В папке server выполнить команду "nodemon server" или "node server", если не установлен nodemon, дождаться сообщений
 
 Server is running on port 4000
-Succesfully connected to Mongo
+Successfully connected to Mongo
 
 Возможно, будет нужно запустить службу MongoDB
 

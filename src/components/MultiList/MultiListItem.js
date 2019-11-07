@@ -1,29 +1,69 @@
 import React, { useState } from "react";
 
-export default function MultiListItem({ list, parent, isUpdated, updateTree }) {
+export default function MultiListItem({
+	list,
+	parent,
+	isUpdated,
+	updateTree,
+	changeTree
+}) {
 	const [newValue, setNewValue] = useState("");
 
-	function removeList(item, parent) {
-		parent.delValue(item);
+	function removeList(parent, item) {
+		// parent.delValue(item);
+		changeTree(prevTree => {
+			prevTree.getNode(parent).delValue(item);
+			return prevTree;
+		});
 		updateTree(!isUpdated);
 	}
 
 	function addSublist(item) {
-		item.addSub();
+		// item.addSub();
+		changeTree(prevTree => {
+			prevTree.getNode(item).addSub();
+			return prevTree;
+		});
 		updateTree(!isUpdated);
 	}
 
 	function removeSublist(item) {
-		item.delSub();
+		// item.delSub();
+		changeTree(prevTree => {
+			prevTree.getNode(item).delSub();
+			return prevTree;
+		});
 		updateTree(!isUpdated);
 	}
 
 	function addListItem(item) {
 		if (newValue) {
-			item.addValue(newValue);
+			// item.addValue(newValue);
+			changeTree(prevTree => {
+				prevTree.getNode(item).addValue(newValue);
+				return prevTree;
+			});
 			setNewValue("");
-			updateTree(!isUpdated);
+			// updateTree(!isUpdated);
 		}
+	}
+
+	function itemMoveUp(parent, item) {
+		// parent.moveUp(list.value);
+		changeTree(prevTree => {
+			prevTree.getNode(parent).moveUp(item.value);
+			return prevTree;
+		});
+		updateTree(!isUpdated);
+	}
+
+	function itemMoveDown(parent, item) {
+		// parent.moveDown(list.value);
+		changeTree(prevTree => {
+			prevTree.getNode(parent).moveDown(item.value);
+			return prevTree;
+		});
+		updateTree(!isUpdated);
 	}
 
 	if (list.hasOwnProperty("length")) {
@@ -37,6 +77,7 @@ export default function MultiListItem({ list, parent, isUpdated, updateTree }) {
 								parent={parent}
 								isUpdated={isUpdated}
 								updateTree={updateTree}
+								changeTree={changeTree}
 							/>
 					  ))
 					: ""}
@@ -64,22 +105,14 @@ export default function MultiListItem({ list, parent, isUpdated, updateTree }) {
 				{parent &&
 				parent.sub.length > 1 &&
 				parent.sub.indexOf(list) > 0 ? (
-					<button
-						onClick={() => {
-							parent.moveUp(list.value);
-							updateTree(!isUpdated);
-						}}>
+					<button onClick={() => itemMoveUp(parent, list)}>
 						&uarr;
 					</button>
 				) : (
 					""
 				)}
 				{parent && parent.sub.indexOf(list) < parent.sub.length - 1 ? (
-					<button
-						onClick={() => {
-							parent.moveDown(list.value);
-							updateTree(!isUpdated);
-						}}>
+					<button onClick={() => itemMoveDown(parent, list)}>
 						&darr;
 					</button>
 				) : (
@@ -93,7 +126,7 @@ export default function MultiListItem({ list, parent, isUpdated, updateTree }) {
 					</button>
 				)}
 				{parent ? (
-					<button onClick={() => removeList(list, parent)}>
+					<button onClick={() => removeList(parent, list)}>
 						Remove
 					</button>
 				) : (
@@ -105,6 +138,7 @@ export default function MultiListItem({ list, parent, isUpdated, updateTree }) {
 						parent={list}
 						isUpdated={isUpdated}
 						updateTree={updateTree}
+						changeTree={changeTree}
 					/>
 				) : (
 					""
@@ -118,6 +152,7 @@ export default function MultiListItem({ list, parent, isUpdated, updateTree }) {
 				parent={list}
 				isUpdated={isUpdated}
 				updateTree={updateTree}
+				changeTree={changeTree}
 			/>
 		);
 	} else {
