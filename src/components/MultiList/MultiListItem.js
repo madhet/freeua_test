@@ -1,69 +1,33 @@
 import React, { useState } from "react";
 
-export default function MultiListItem({
-	list,
-	parent,
-	isUpdated,
-	updateTree,
-	changeTree
-}) {
+export default function MultiListItem({ list, parent, editTree }) {
 	const [newValue, setNewValue] = useState("");
 
 	function removeList(parent, item) {
-		// parent.delValue(item);
-		changeTree(prevTree => {
-			prevTree.getNode(parent).delValue(item);
-			return prevTree;
-		});
-		updateTree(!isUpdated);
+		editTree("del-list", parent, item);
 	}
 
 	function addSublist(item) {
-		// item.addSub();
-		changeTree(prevTree => {
-			prevTree.getNode(item).addSub();
-			return prevTree;
-		});
-		updateTree(!isUpdated);
+		editTree("add-sub", item);
 	}
 
 	function removeSublist(item) {
-		// item.delSub();
-		changeTree(prevTree => {
-			prevTree.getNode(item).delSub();
-			return prevTree;
-		});
-		updateTree(!isUpdated);
+		editTree("del-sub", item);
 	}
 
 	function addListItem(item) {
 		if (newValue) {
-			// item.addValue(newValue);
-			changeTree(prevTree => {
-				prevTree.getNode(item).addValue(newValue);
-				return prevTree;
-			});
+			editTree("add-item", item, newValue);
 			setNewValue("");
-			// updateTree(!isUpdated);
 		}
 	}
 
 	function itemMoveUp(parent, item) {
-		// parent.moveUp(list.value);
-		changeTree(prevTree => {
-			prevTree.getNode(parent).moveUp(item.value);
-			return prevTree;
-		});
-		updateTree(!isUpdated);
+		editTree("move-up", parent, item);
 	}
 
 	function itemMoveDown(parent, item) {
-		// parent.moveDown(list.value);
-		changeTree(prevTree => {
-			prevTree.getNode(parent).moveDown(item.value);
-			return prevTree;
-		});
-		updateTree(!isUpdated);
+		editTree("move-down", parent, item);
 	}
 
 	if (list.hasOwnProperty("length")) {
@@ -75,9 +39,7 @@ export default function MultiListItem({
 								key={item.value + idx}
 								list={item}
 								parent={parent}
-								isUpdated={isUpdated}
-								updateTree={updateTree}
-								changeTree={changeTree}
+								editTree={editTree}
 							/>
 					  ))
 					: ""}
@@ -136,9 +98,7 @@ export default function MultiListItem({
 					<MultiListItem
 						list={list.sub}
 						parent={list}
-						isUpdated={isUpdated}
-						updateTree={updateTree}
-						changeTree={changeTree}
+						editTree={editTree}
 					/>
 				) : (
 					""
@@ -147,13 +107,7 @@ export default function MultiListItem({
 		);
 	} else if (list.hasOwnProperty("value") && list.sub) {
 		return (
-			<MultiListItem
-				list={list.sub}
-				parent={list}
-				isUpdated={isUpdated}
-				updateTree={updateTree}
-				changeTree={changeTree}
-			/>
+			<MultiListItem list={list.sub} parent={list} editTree={editTree} />
 		);
 	} else {
 		return <div>Unable to create list</div>;

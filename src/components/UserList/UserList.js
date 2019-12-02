@@ -4,7 +4,8 @@ export default function UserList({
 	users,
 	currentUser,
 	setCurrentUser,
-	setEdit
+	setEdit,
+	routerProps
 }) {
 	if (users) {
 		return (
@@ -12,6 +13,14 @@ export default function UserList({
 				<button onClick={() => setEdit({ show: true, user: {} })}>
 					New user
 				</button>
+				{/* <button
+					onClick={() => {
+						routerProps.history.push("/edit", {
+							user: {}
+						});
+					}}>
+					Edit
+				</button> */}
 				{users.length ? (
 					<ul className="user-list">
 						{users.map(user => {

@@ -33,7 +33,7 @@ mongoose.connect(
 	},
 	err => {
 		if (err) throw err;
-		console.log("Successfully connected to Mongo");
+		else console.log("Successfully connected to Mongo");
 	}
 );
 

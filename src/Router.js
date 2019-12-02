@@ -3,6 +3,7 @@ import { Route } from "react-router-dom";
 import MainMenu from "./layouts/MainMenu/MainMenu";
 import Users from "./pages/Users/Users";
 import List from "./pages/List";
+import Edit from "./pages/Edit";
 
 const router = [
 	{
@@ -16,6 +17,12 @@ const router = [
 		exact: true,
 		layout: MainMenu,
 		component: List
+	},
+	{
+		path: "/edit",
+		exact: true,
+		layout: MainMenu,
+		component: Edit
 	}
 ];
 

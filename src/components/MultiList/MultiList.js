@@ -74,17 +74,30 @@ export default function MultiList({ title }) {
 	const [isUpdated, updateTree] = useState(false);
 	const [stateTree, changeTree] = useState(new TreeList("", []));
 
+	function editTree(action, parent, item) {
+		changeTree(prevTree => {
+			if (action === "add-item") {
+				prevTree.getNode(parent).addValue(item);
+			} else if (action === "add-sub") {
+				prevTree.getNode(parent).addSub();
+			} else if (action === "del-sub") {
+				prevTree.getNode(parent).delSub();
+			} else if (action === "del-list") {
+				prevTree.getNode(parent).delValue(item);
+			} else if (action === "move-up") {
+				prevTree.getNode(parent).moveUp(item.value);
+			} else if (action === "move-down") {
+				prevTree.getNode(parent).moveDown(item.value);
+			}
+			return prevTree;
+		});
+		updateTree(!isUpdated);
+	}
+
 	return (
 		<div className="tree-wrapper">
 			{title ? <div className="tree-title">{title}</div> : ""}
-			<MultiListItem
-				list={stateTree}
-				// list={someTree}
-				// list={emptyTree}
-				isUpdated={isUpdated}
-				updateTree={updateTree}
-				changeTree={changeTree}
-			/>
+			<MultiListItem list={stateTree} editTree={editTree} />
 		</div>
 	);
 }
